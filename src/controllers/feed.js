@@ -1,4 +1,3 @@
-const { index } = require("./students");
 const Question = require("../models/Question");
 
 
@@ -27,7 +26,8 @@ module.exports = {
                 }
                 ],
                 order: [["created_at", "DESC"]]
-            });
+            }); 
+            feed.Categ
 
             res.send(feed);
 

@@ -1,5 +1,8 @@
 const Student = require("../models/Student");
+const bcrypt = require("bcryptjs");
+const jwt = require("bcryptjs");
 const {Op} = require("sequelize");
+const auth = require("../config/auth.json");
 
 module.exports = {
     //Função que vai ser executada pela rota
@@ -59,9 +62,21 @@ async store (req, res)  {
         if(student)
         return res.status(400).send({error: "Student já cadastrado"});
 
-        student = await Student.create({ra, name, email, password});
+        const passwordCript = bcrypt.hashSync(password);
 
-        res.status(201).send({id: student.id});
+        student = await Student.create({ra, name, email, password: passwordCript});
+
+        const token = jwt.sign({ studentId: student.id, studentName: student.name}, auth.secret);
+
+        res.status(201).send({
+            student: {
+                studentId: student.id,
+                name: student.name,
+                ra: student.ra,
+                email: student.email
+            },
+                token
+        });
     } catch (error) {
         console.log(error);
         res.status(500).send({error});
@@ -73,7 +88,7 @@ async store (req, res)  {
 
  async delete  (req, res)  {
     //Recuperar o id do aluno
-    const studentId = req.params.id
+    const studentId = req.params.id;
 
     try {
         let student = await Student.findByPk(studentId);

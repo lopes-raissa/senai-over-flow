@@ -12,7 +12,7 @@ module.exports = {
 
         const questionId = req.params.id;
         
-        const studentId = req.headers.authorization;
+        const { studentId } = req;
         
         const { description } = req.body;
 
