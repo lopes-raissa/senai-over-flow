@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("bcryptjs");
 const {Op} = require("sequelize");
 const auth = require("../config/auth.json");
+const { generateToken } = require("../utils");
 
 module.exports = {
     //Função que vai ser executada pela rota
@@ -66,7 +67,12 @@ async store (req, res)  {
 
         student = await Student.create({ra, name, email, password: passwordCript});
 
-        const token = jwt.sign({ studentId: student.id, studentName: student.name}, auth.secret);
+        const token = generateToken({
+            studentId: student.id, 
+            studentName: student.name,
+        });
+        
+    
 
         res.status(201).send({
             student: {

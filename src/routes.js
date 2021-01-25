@@ -13,6 +13,7 @@ const questionController = require("./controllers/questions");
 const answersController = require("./controllers/answers");
 const feedController = require("./controllers/feed");
 const sessionController = require("./controllers/sessions");
+const uploadFirebase = require("./services/uploadFirebase");
 
 const routes = express.Router();
 
@@ -55,6 +56,7 @@ routes.get("/students/:id", studentController.find);
 routes.post(
   "/questions",
   uploadQuestions,
+  uploadFirebase,
   validationQuestions.create,
   questionController.store
 );
