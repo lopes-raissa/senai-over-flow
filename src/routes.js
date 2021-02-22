@@ -1,7 +1,7 @@
 const express = require("express");
 
 const authMiddleare = require("./middleware/authorization");
-const uploadQuestions = require("./middleware/uploadQuestion");
+const uploadSingleImage = require("./middleware/uploadSingleImage");
 
 //Import das validações
 const validationStudents = require("./validators/student");
@@ -9,10 +9,12 @@ const validationQuestions = require("./validators/questions");
 const validationAnswers = require("./validators/answers");
 
 const studentController = require("./controllers/students");
+const studentImagesController = require("./controllers/studentImages");
 const questionController = require("./controllers/questions");
 const answersController = require("./controllers/answers");
 const feedController = require("./controllers/feed");
 const sessionController = require("./controllers/sessions");
+const categoriesController = require("./controllers/categories");
 const uploadFirebase = require("./services/uploadFirebase");
 
 const routes = express.Router();
@@ -52,10 +54,12 @@ routes.put("/students/:id", studentController.update);
 
 routes.get("/students/:id", studentController.find);
 
+routes.post("/students/:id/images", uploadSingleImage, uploadFirebase, studentImagesController.store);
+
 //Rotas de questions
 routes.post(
   "/questions",
-  uploadQuestions,
+  uploadSingleImage,
   uploadFirebase,
   validationQuestions.create,
   questionController.store
@@ -64,6 +68,7 @@ routes.delete("/questions/:id", questionController.delete);
 routes.put("/questions/:id", questionController.update);
 
 // Rotas de respostas
+routes.get("/questions", validationQuestions.index, questionController.index);
 routes.post(
   "/questions/:id/answers",
   validationAnswers.create,
@@ -72,5 +77,8 @@ routes.post(
 
 //Rotas do feed
 routes.get("/feed", feedController.index);
+
+//Rotas de categorias
+routes.get("/categories", categoriesController.index);
 
 module.exports = routes;

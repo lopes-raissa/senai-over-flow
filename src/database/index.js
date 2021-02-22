@@ -7,7 +7,7 @@ const Student = require("../models/Student");
 const Category = require("../models/Category");
 const Answer = require("../models/Answer");
 
-const connection = new Sequelize(dbConfig);
+const connection = new Sequelize(dbConfig.url, dbConfig.config);
 
 //Inicializa os Models
 Student.init(connection);

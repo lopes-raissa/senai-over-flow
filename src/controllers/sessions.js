@@ -1,6 +1,6 @@
 const Student = require("../models/Student");
 const bcrypt = require("bcryptjs");
-const auth = require("../config/auth.json");
+const auth = require("../config/auth");
 const jwt = require("jsonwebtoken");
 const { generateToken } = require("../utils");
 
@@ -23,15 +23,18 @@ module.exports = {
         studentName: student.name,
       })
 
-      res.status(201).send({
-        student: {
-          studentId: student.id,
-          name: student.name,
-          ra: student.ra,
-          email: student.email,
-        },
-        token,
-      });
+      setTimeout(() => {
+        res.status(201).send({
+          student: {
+            studentId: student.id,
+            name: student.name,
+            ra: student.ra,
+            email: student.email,
+            image: student.image,
+          },
+          token,
+        });
+      }, 300);
     } catch (error) {
       console.log(error);
       res.status(500).send(error);
